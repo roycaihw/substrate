@@ -504,6 +504,9 @@ func TestTrackerDetachRetriesFailedPrune(t *testing.T) {
 	tr := newTestTracker(t, store)
 	tr.CommitLocal(trackedActorUID, testRef("s1", 1, tr.clock.Now()))
 	// A file where the local checkpoint directory belongs fails the prune.
+	if err := os.MkdirAll(ateletpath.ActorSnapshotPath(trackedActorUID), 0o700); err != nil {
+		t.Fatal(err)
+	}
 	if err := os.WriteFile(ateletpath.LocalCheckpointsDir(trackedActorUID), nil, 0o600); err != nil {
 		t.Fatal(err)
 	}
